@@ -1,0 +1,23 @@
+
+[project]
+name = "spmc-py"
+version = "0.1.0"
+description = "Single Producer Multiple Consumer queue implementation in Cython"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cython>=3.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "cython>=3.0"]
+build-backend = "setuptools.build_meta"
+
+[[tool.setuptools.ext-modules]]
+name = "spmc_py"
+sources = ["src/spmc_py.pyx"]
+language = "c++"
+extra-compile-args = ["-std=c++11"]
+
+[tool.cython-lint]
+max-line-length = 120
