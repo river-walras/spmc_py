@@ -2,12 +2,12 @@ import threading
 import time
 import math
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, TYPE_CHECKING
 from spmc_py import SPMCQueue
 
 @dataclass
 class Msg:
-    ts_ms: int
+    ts_ns: int
     idx: int
 
 class Statistic:
@@ -51,11 +51,11 @@ class Statistic:
 def timestamp_ns() -> int:
     return time.time_ns()
 
-def timestamp_ms() -> int:
-    return int(time.time() * 1000)
-
 MAX_I = 1000000  # Reduced for Python performance
-q = SPMCQueue(1024)
+if TYPE_CHECKING:
+    q: SPMCQueue[Msg] = SPMCQueue(1024)
+else:
+    q = SPMCQueue(1024)
 
 def read_thread(tid: int):
     stat = Statistic()
@@ -68,8 +68,8 @@ def read_thread(tid: int):
         if msg is None:
             continue
             
-        now = timestamp_ms()
-        latency = now - msg.ts_ms
+        now = timestamp_ns()
+        latency = now - msg.ts_ns
         stat.add(latency)
         count += 1
         
@@ -86,7 +86,7 @@ def read_thread(tid: int):
 
 def write_thread():
     for i in range(MAX_I):
-        msg = Msg(ts_ms=timestamp_ms(), idx=i)
+        msg = Msg(ts_ns=timestamp_ns(), idx=i)
         q.write(msg)
 
 def performance_test():
@@ -121,7 +121,7 @@ def basic_test():
     queue = SPMCQueue(64)
     
     # Test basic write/read
-    test_msg = Msg(ts_ms=timestamp_ms(), idx=0)
+    test_msg = Msg(ts_ns=timestamp_ns(), idx=0)
     queue.write(test_msg)
     reader = queue.get_reader()
     msg = reader.read()
@@ -129,7 +129,7 @@ def basic_test():
     
     # Test read_last
     for i in range(5):
-        queue.write(Msg(ts_ms=timestamp_ms(), idx=i + 10))
+        queue.write(Msg(ts_ns=timestamp_ns(), idx=i + 10))
     
     last_msg = reader.read_last()
     print(f"Read last: idx={last_msg.idx if last_msg else 'None'}")
