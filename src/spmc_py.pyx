@@ -99,7 +99,7 @@ cdef class SPMCQueue:
         # Atomic release - cast to atomic and store (like C++ version)
         (<atomic[uint32_t] *> &blk.idx).store(current_write_idx, memory_order_release)
 
-    cdef inline uint32_t _get_block_idx(self, uint32_t blk_idx):
+    cdef inline uint32_t _get_block_idx(self, uint32_t blk_idx) nogil:
         """Internal method to get block index"""
         return (<atomic[uint32_t] *> &self.blks[blk_idx].idx).load(memory_order_acquire)
 

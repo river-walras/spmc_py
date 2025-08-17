@@ -17,7 +17,7 @@ build-backend = "setuptools.build_meta"
 name = "spmc_py"
 sources = ["src/spmc_py.pyx"]
 language = "c++"
-extra-compile-args = ["-std=c++11"]
+extra-compile-args = ["-std=c++11", "-O3", "-DNDEBUG", "-march=native"]
 
 [tool.cython-lint]
 max-line-length = 120

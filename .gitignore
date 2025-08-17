@@ -14,3 +14,5 @@ wheels/
 *.so
 .idea/
 .vscode/
+result.json
+*.prof

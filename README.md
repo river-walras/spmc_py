@@ -16,7 +16,7 @@ Build from source using uv:
 
 ```bash
 uv build
-uv pip install dist/spmc_py-*.whl
+uv pip install -e .
 ```
 
 ## Usage
