@@ -50,9 +50,9 @@ class Statistic:
 
 MAX_I = 1000000  # Reduced for Python performance
 if TYPE_CHECKING:
-    q: SPMCQueue[Msg] = SPMCQueue(1024)
+    q: SPMCQueue[Msg] = SPMCQueue(32768)
 else:
-    q = SPMCQueue(1024)
+    q = SPMCQueue(32768)
 
 def read_thread(tid: int):
     stat = Statistic()
